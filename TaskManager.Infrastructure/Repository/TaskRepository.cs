@@ -15,25 +15,72 @@ public class TaskRepository : ITaskRepository
     public async Task<TaskManager.DomainCore.Task> AddAsync(TaskManager.DomainCore.Task task)
     {
         string sql = @"
-			INSERT INTO PROJECT
+			INSERT INTO TASK
 			(
-                Name,
-                Owner,
-                CreateDate,
-                StartDate,
-                FinishDate
+                [User],
+                Title,
+                Description,
+                State,
+                Priority,
+                TargetDate,
+                ProjectId
 			)
 			OUTPUT INSERTED.*
 			VALUES
 			(
-                @Name,
-                @Owner,
-                @CreateDate,
-                @StartDate,
-                @FinishDate
+                @User,
+                @Title,
+                @Description,
+                @State,
+                @Priority,
+                @TargetDate,
+                @ProjectId
 			);";
 
         return await _dbSession.Connection.QuerySingleAsync<TaskManager.DomainCore.Task>(sql, task, _dbSession.Transaction);
+    }
+
+    public async Task<int> AddChangeAsync(TaskHistory change)
+    {
+        string sql = @"
+			INSERT INTO TASK_HISTORY
+			(
+                [TaskId],
+                [User],
+                [ChangeDate],
+                [BeforeChange],
+                [AfterChange]
+			)
+			VALUES
+			(
+                @TaskId,
+                @User,
+                @ChangeDate,
+                @BeforeChange,
+                @AfterChange
+			);";
+
+        return await _dbSession.Connection.ExecuteAsync(sql, change, _dbSession.Transaction);
+    }
+
+    public async Task<TaskDiscussion> CommentAsync(TaskDiscussion newComment)
+    {
+        string sql = @"
+			INSERT INTO TASK_DISCUSSION
+			(
+                [Comment],
+                [User],
+                [TaskId]
+			)
+			OUTPUT INSERTED.*
+			VALUES
+			(
+                @Comment,
+                @User,
+                @TaskId
+			);";
+
+        return await _dbSession.Connection.QuerySingleAsync<TaskManager.DomainCore.TaskDiscussion>(sql, newComment, _dbSession.Transaction);
     }
 
     public async Task<List<Project>> GetAllAsync(string user)
@@ -57,10 +104,10 @@ public class TaskRepository : ITaskRepository
         string sql = @"
 			SELECT
                 Id,
-                User,
+                [User],
                 Title,
-                Description,
-                State,
+                [Description],
+                [State],
                 Priority,
                 TargetDate,
                 ProjectId
@@ -75,10 +122,10 @@ public class TaskRepository : ITaskRepository
         string sql = @"
 			SELECT
                 Id,
-                User,
+                [User],
                 Title,
-                Description,
-                State,
+                [Description],
+                [State],
                 Priority,
                 TargetDate,
                 ProjectId
@@ -94,7 +141,7 @@ public class TaskRepository : ITaskRepository
 			SELECT
                 Id,
                 Comment,
-                User,
+                [User],
                 TaskId
             FROM TASK_DISCUSSION
             WHERE TaskId = @taskId;";
@@ -108,7 +155,7 @@ public class TaskRepository : ITaskRepository
 			SELECT
                 Id,
                 TaskId
-                User,
+                [User],
                 ChangeDate,
                 BeforeChange,
                 AfterChange
@@ -126,8 +173,18 @@ public class TaskRepository : ITaskRepository
         return await _dbSession.Connection.ExecuteAsync(sql, id, _dbSession.Transaction);
     }
 
-    public Task<DomainCore.Task> UpdateAsync(DomainCore.Task task)
+    public async Task<int> UpdateAsync(DomainCore.Task task)
     {
-        throw new NotImplementedException();
+        string sql = @"
+        	UPDATE TASK SET
+                [Title] = @Title,
+                [User] = @User,
+                [Description] = @Description,
+                [State] = @State,
+                [TargetDate] = @TargetDate,
+                [ProjectId] = @ProjectId
+        	WHERE [Id] = @id;";
+
+        return await _dbSession.Connection.ExecuteAsync(sql, task, _dbSession.Transaction);
     }
 }

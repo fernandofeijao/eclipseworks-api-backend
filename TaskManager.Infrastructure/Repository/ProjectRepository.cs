@@ -73,6 +73,6 @@ public class ProjectRepository : IProjectRepository
         string sql = @"
             DELETE FROM PROJECT WHERE Id = @id;";
 
-        return _dbSession.Connection.ExecuteAsync(sql, id, _dbSession.Transaction);
+        return _dbSession.Connection.ExecuteAsync(sql, new { id }, _dbSession.Transaction);
     }
 }

@@ -11,6 +11,9 @@ namespace TaskManager.Api
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<ITaskRepository, TaskRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IReportRepository, ReportRepository>();
 
             return services;
         }

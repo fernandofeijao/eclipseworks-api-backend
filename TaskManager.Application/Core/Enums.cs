@@ -2,15 +2,22 @@ namespace TaskManager.Application
 {
     public enum TaskStateEnum : byte
     {
-        New = 0,
-        Active = 1,
-        Closed = 2
+        New = 1,
+        Active = 2,
+        Closed = 3
     }
 
     public enum TaskPrioriyEnum : byte
     {
-        High = 0,
-        Medium = 1,
+        High = 1,
+        Medium = 2,
         Low = 3
+    }
+
+    public enum UserProfileEnum : byte
+    {
+        None = 0,
+        Manager = 1,
+        Normal = 2
     }
 }

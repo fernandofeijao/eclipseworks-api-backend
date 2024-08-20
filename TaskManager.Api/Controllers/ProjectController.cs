@@ -29,7 +29,7 @@ namespace TaskManager.Api
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> Add(ProjectDTO project)
+        public async Task<IActionResult> Add(NewProjectDTO project)
         {
             return (await _projectService.AddAsync(project)).Answer(
                 success => AnswerOk(success.Value),

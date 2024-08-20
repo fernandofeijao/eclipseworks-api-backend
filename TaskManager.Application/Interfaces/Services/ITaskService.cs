@@ -5,8 +5,9 @@ namespace TaskManager.Application
     public interface ITaskService
     {
         Task<Result<List<TaskDTO>>> GetAllByProjectAsync(int projectId);
-        Task<Result<TaskDTO>> AddAsync(TaskDTO task);
+        Task<Result<TaskDTO>> AddAsync(NewTaskDTO taskDto);
         Task<Result<TaskDTO>> RemoveAsync(int id);
-        Task<TaskDTO> UpdateAsync(TaskManager.DomainCore.Task task);
+        Task<Result<TaskDTO>> UpdateAsync(EditTaskDTO taskDto);
+        Task<Result<TaskDiscussionDTO>> CommentAsync(NewTaskDiscussionDTO taskDiscussionDto);
     }
 }

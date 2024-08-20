@@ -8,9 +8,11 @@ namespace TaskManager.Application
         Task<List<TaskManager.DomainCore.Task>> GetAllByProject(int projectId);
         Task<TaskManager.DomainCore.Task?> GetAsync(int id);
         Task<TaskManager.DomainCore.Task> AddAsync(TaskManager.DomainCore.Task task);
-        Task<TaskManager.DomainCore.Task> UpdateAsync(TaskManager.DomainCore.Task task);
+        Task<int> UpdateAsync(TaskManager.DomainCore.Task task);
         Task<int> RemoveAsync(int id);
         Task<List<TaskManager.DomainCore.TaskDiscussion>> GetDiscussionAsync(int taskId);
         Task<List<TaskManager.DomainCore.TaskHistory>> GetHistoryAsync(int taskId);
+        Task<TaskDiscussion> CommentAsync(TaskDiscussion newComment);
+        Task<int> AddChangeAsync(TaskHistory change);
     }
 }

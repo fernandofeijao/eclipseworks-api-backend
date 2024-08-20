@@ -11,17 +11,25 @@ public class ProjectService : IProjectService
     private readonly IProjectRepository _projectRepository;
     private readonly IMapper _mapper;
     private readonly ITaskRepository _taskRepository;
+    private readonly IUserRepository _userRepository;
 
-    public ProjectService(IProjectRepository projectRepository, IMapper mapper, ITaskRepository taskRepository)
+    public ProjectService(IProjectRepository projectRepository, IMapper mapper, ITaskRepository taskRepository, IUserRepository userRepository)
     {
         _projectRepository = projectRepository;
         _mapper = mapper;
         _taskRepository = taskRepository;
+        _userRepository = userRepository;
     }
 
-    public async Task<Result<ProjectDTO>> AddAsync(ProjectDTO projectDTO)
+    public async Task<Result<ProjectDTO>> AddAsync(NewProjectDTO projectDTO)
     {
         var project = _mapper.Map<Project>(projectDTO);
+
+        var user = await _userRepository.GetAsync(project.Owner);
+        if (user is null)
+            return Result.Fail("O usuário informado não existe.");
+
+        project.CreateDate = DateTime.Now;
         var result = await _projectRepository.AddAsync(project);
 
         if (result is null)
