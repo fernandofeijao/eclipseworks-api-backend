@@ -193,4 +193,26 @@ public class ProjectUnitTest
         Assert.True(result.IsFailed);
         Assert.Equal(msgTasksNotCompleted, result.Reasons[0].Message);
     }
+
+    [Fact(DisplayName = "RemoveAsync quando executado e um projeto não existir, deve retornar falha e uma mensagem informando.")]
+    [Trait("ProjectService.RemoveAsync", "Unit")]
+    public async System.Threading.Tasks.Task GivenAProjectIdNotExists_WhenRemoveAsyncCalled_ThenReturnAFailWithMessage()
+    {
+        //Arrange
+        var userRepoMock = Substitute.For<IUserRepository>();
+        var taskRepoMock = Substitute.For<ITaskRepository>();
+        var projectRepoMock = Substitute.For<IProjectRepository>();
+
+        var projectIdFake = new Faker().Random.Int(0);
+
+        var projectService = new ProjectService(projectRepoMock, _mapper, taskRepoMock, userRepoMock);
+
+        //Act
+        var result = await projectService.RemoveAsync(projectIdFake);
+
+        //Assert
+        Assert.IsType<Result<ProjectDTO>>(result);
+        Assert.True(result.IsFailed);
+        result.Reasons[0].Message.Should().Be("O recurso informado não existe.");
+    }
 }

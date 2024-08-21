@@ -91,7 +91,7 @@ public class TaskService : ITaskService
             return Result.Fail("O usuário informado não existe.");
 
         //Partindo da premissa que a API terá autenticação, essa validação é desnecessária
-        var userAction = await _userRepository.GetAsync(taskToEdit.User);
+        var userAction = await _userRepository.GetAsync(taskDto.ActionUser);
         if (userAction is null)
             return Result.Fail("O usuário informado no header não existe.");
 
